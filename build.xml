@@ -1,0 +1,76 @@
+<project name="grid-command" default="all" basedir=".">
+    
+    <!-- ==================== Properties =========================== -->
+    <property name="app.name"      value="grid-command" />
+    <property name="app.version"   value="1.0"/>
+    <property name="app.fullname"   value="${app.name}-${app.version}"/>
+    <property name="build.home"    value="${basedir}/build"/>
+    <property name="dist.home"     value="${basedir}/dist"/>
+    <property name="docs.home"     value="${basedir}/docs"/>
+    <property name="src.home"      value="${basedir}/src"/>
+    <property name="mainClass"      value="main.Main"/>
+    <property name="javac.encoding"      value="UTF-8"/>
+   
+    <!-- ==================== Compile options =========================== -->
+   
+    <property name="compile.debug"       value="true"/>
+    <property name="compile.deprecation" value="false"/>
+    <property name="compile.optimize"    value="true"/>
+
+    <!-- ==================== All Target ====================================== -->
+   
+    <target name="all" depends="clean,prepare,compile,jarFiles,javadoc" description="Clean build and dist directories, then compile"/>
+  
+    <!-- ==================== Clean Target ==================================== -->
+   
+    <target name="clean" description="Delete old build and dist directories">
+        <delete dir="${build.home}"/>
+        <delete dir="${dist.home}"/>
+        <delete dir="${docs.home}"/>
+    </target>
+
+    <!-- ==================== Prepare Target ================================== -->
+
+    <target name="prepare">
+        <mkdir dir="${build.home}"/>
+        <mkdir dir="${dist.home}"/>
+        <mkdir dir="${docs.home}"/>
+    </target>
+
+    <!-- ==================== Compile Target ================================== -->
+   
+    <target name="compile" depends="prepare" description="Compile Java sources">
+
+        <javac srcdir="${src.home}"
+               destdir="${build.home}"
+               debug="${compile.debug}"
+               deprecation="${compile.deprecation}"
+               optimize="${compile.optimize}"
+               encoding="${javac.encoding}"
+               includeantruntime="false">
+        </javac>
+    </target>
+    
+    <!-- ==================== Dist Target ===================================== -->
+
+    <target name="jarFiles" depends="compile" description="Create binary distribution">	
+        <!-- Création du JAR pour le serveur -->
+        <jar jarfile="${dist.home}/${app.fullname}.jar"
+            basedir="${build.home}">
+            <manifest>
+                <attribute name="Main-Class" value="${mainClass}"/>
+            </manifest>
+        </jar>
+    </target>
+    
+    <!-- ==================== Javadoc Target ================================== -->
+
+    <target name="javadoc" description="Create Javadoc API documentation">
+        <javadoc 
+            sourcepath="${src.home}" 
+            destdir="${docs.home}" 
+            packagenames="*">
+        </javadoc>
+    </target>
+
+</project>
